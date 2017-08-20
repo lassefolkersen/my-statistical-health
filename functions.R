@@ -80,8 +80,8 @@ prepare_input_file<-function(path, email, filename, protect_from_deletion){
   
 
   
-  o<-try(read.xlsx(path))
-  if(class(o)=="try-error"){
+  d<-try(read.xlsx(path))
+  if(class(d)=="try-error"){
       m<-c(format(Sys.time(),"%Y-%m-%d-%H-%M-%S"),"no_xlsx",email,uniqueID)
       m<-paste(m,collapse="\t")
       write(m,file="/home/ubuntu/misc_files/submission_log.txt",append=TRUE)
@@ -97,7 +97,7 @@ prepare_input_file<-function(path, email, filename, protect_from_deletion){
   data_folder<-paste("/home/ubuntu/data/",uniqueID,"/",sep="")
   dir.create(data_folder)
   data_path<-paste("/home/ubuntu/data/",uniqueID,"/",uniqueID,".rdata",sep="")
-  save(o,file=data_path)
+  save(d,file=data_path)
   
   
   #creating the pData file
@@ -218,8 +218,8 @@ generate_report<-function(uniqueIDs=NULL, filename=NULL){
   #     s<-strsplit(user_log_here,"\t")
   #     dates<-sapply(s,function(x){x[1]})
   #     modules<-sapply(s,function(x){x[2]})
-  #     o<-data.frame(uniqueIDs=rep(uniqueID,length(user_log_here)),modules=modules,dates=dates,stringsAsFactors=F)
-  #     user_log<-rbind(user_log,o)
+  #     d<-data.frame(uniqueIDs=rep(uniqueID,length(user_log_here)),modules=modules,dates=dates,stringsAsFactors=F)
+  #     user_log<-rbind(user_log,d)
   #   }else{
   #     # user_log<-c()
   #   }
