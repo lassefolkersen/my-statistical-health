@@ -2,6 +2,7 @@
 source("../uifunctions.R")
 initialize('hc',TRUE)
 
+
 shinyUI(bootstrapPage(
   head(),
   navigation(),
@@ -15,6 +16,7 @@ shinyUI(bootstrapPage(
   wellPanel(
     # This outputs the dynamic UI component
     uiOutput("ui")
+    
   ),
   # 
   # conditionalPanel(
@@ -56,11 +58,11 @@ shinyUI(bootstrapPage(
   beginPanel('2/3'),
   
   # h2("Genetic risk score:"),
-  htmlOutput("text_1"),
-  plotOutput("plot_1"),
-  htmlOutput("text_2"),
-  dataTableOutput("table1"),
-  htmlOutput("text_3"),
+  # htmlOutput("text_1"),
+  # plotOutput("plot_1"),
+  # htmlOutput("text_2"),
+  # dataTableOutput("table1"),
+  # htmlOutput("text_3"),
   
   
   
