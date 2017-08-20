@@ -19,8 +19,8 @@ shinyUI(bootstrapPage(
     
   ),
   actionButton("goButton","Plot data"),
-  actionButton("prediction","Prediction analysis"),
-  actionButton("interaction","Interaction analysis"),
+  actionButton("predictionButton","Prediction analysis"),
+  actionButton("interactionButton","Interaction analysis"),
   endPanel(),
   beginPanel('2/3'),
   
