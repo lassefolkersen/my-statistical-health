@@ -29,7 +29,7 @@ if(length(paypal)!=1)stop("paypal not length 1")
 
 
 prepare_input_file<-function(path, email, filename, protect_from_deletion){
-  library(tools)
+  # library(tools)
   library(openxlsx)
   
   if(class(path)!="character")stop(paste("path must be character, not",class(path)))
@@ -56,7 +56,7 @@ prepare_input_file<-function(path, email, filename, protect_from_deletion){
     stop(safeError("At the current stage, the project is only open to backers. Please visit our kickstarter page at: http://kck.st/1VlrTlf - sorry for the inconvenience. Going forward the plan is to run on a more voluntary pricing basis, always as non-profit (see terms-of-use). No data was saved."))
   }
   
-
+  
   # Create uniqueID 
   uniqueID <- paste("id_",sample(1000:9000,1),sample(10000:90000,1),sep="")
   numberOfLetters<-sample(c(1,1,2,3),1)
@@ -78,20 +78,37 @@ prepare_input_file<-function(path, email, filename, protect_from_deletion){
     stop(safeError("Problem with unique ID generation. Please re-load and try again."))
   }
   
-
   
-  d<-try(read.xlsx(path))
+  
+  d<-try(read.xlsx(path, detectDates=T))
   if(class(d)=="try-error"){
-      m<-c(format(Sys.time(),"%Y-%m-%d-%H-%M-%S"),"no_xlsx",email,uniqueID)
-      m<-paste(m,collapse="\t")
-      write(m,file="/home/ubuntu/misc_files/submission_log.txt",append=TRUE)
-      stop(safeError("The file didn't look like an xlsx file."))
+    m<-c(format(Sys.time(),"%Y-%m-%d-%H-%M-%S"),"no_xlsx",email,uniqueID)
+    m<-paste(m,collapse="\t")
+    write(m,file="/home/ubuntu/misc_files/submission_log.txt",append=TRUE)
+    stop(safeError("The file didn't look like an xlsx file."))
     
   }
   
   
+  if(tolower(colnames(d)[1])!="date"){
+    m<-c(format(Sys.time(),"%Y-%m-%d-%H-%M-%S"),"no_date_header",email,uniqueID)
+    m<-paste(m,collapse="\t")
+    write(m,file="/home/ubuntu/misc_files/submission_log.txt",append=TRUE)
+    stop(safeError("The header of the first column must be 'date'."))
+  }
+  if(colnames(d)[1]!="date"){colnames(d)[1]<-"date"
   
-
+  
+  
+  if(class(d[,1])!="Date"){
+    m<-c(format(Sys.time(),"%Y-%m-%d-%H-%M-%S"),"no_date_class",email,uniqueID)
+    m<-paste(m,collapse="\t")
+    write(m,file="/home/ubuntu/misc_files/submission_log.txt",append=TRUE)
+    stop(safeError("The first column must contain data that is seens as a date."))
+    
+  }
+  
+  
   
   #create data folder  
   data_folder<-paste("/home/ubuntu/data/",uniqueID,"/",sep="")
@@ -108,7 +125,7 @@ prepare_input_file<-function(path, email, filename, protect_from_deletion){
   writeLines(paste(c(uniqueID,filename,email,timeStamp,md5sum,protect_from_deletion),collapse="\t"),f)
   close(f)
   
-
+  
   #clean up    
   unlink(path)
   return(paste0("Data file succesfully submitted. You can now go to the analysis interface and look at your data using the uniqueID <i>",uniqueID,"</i>"))
@@ -184,7 +201,7 @@ remove_all_empty_data_folders<-function(uniqueIDs=NULL){
 generate_report<-function(uniqueIDs=NULL, filename=NULL){
   #A function that will crawl all data directories and generate report with various 
   stop("Not implemented")
-    # 
+  # 
   # if(is.null(uniqueIDs)){
   #   uniqueIDs<-list.files("/home/ubuntu/data/")
   # }else{
