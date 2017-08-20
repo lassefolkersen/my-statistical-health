@@ -12,21 +12,21 @@ shinyUI(bootstrapPage(
 	beginPanel('1/3'),
 	fileInput("largeFile", "Upload genome data", multiple = FALSE, accept = NULL),
 	textInput(inputId="email", label = "Email", value = "nacho@24genetics.com"),
-	# HTML("<u><a href='http://www.impute.me/www/terms_of_use.html'>Terms of use.</a></u>"),
-	# checkboxInput("delete2weeks", "Non-fUnctional button", value = TRUE, width = NULL),
-	actionButton("goButton","Start analysis data"),
-	# actionButton("send_data","Summarize last-days data and send"),
+	HTML("<u><a href='http://www.impute.me/www/terms_of_use.html'>Terms of use.</a></u>"),
+	checkboxInput("delete2weeks", "Delete data after two weeks", value = TRUE, width = NULL),
+	actionButton("goButton","Send data to analysis"),
+	
 	
 	
 
 	
 	endPanel(),
 	beginPanel('2/3'),
-	HTML("Upload the file here. It is <i>very</i> important to wait until the process is finished. This may take several minutes and a receipt message will appear. If the browser window is closed or interupted before that, not all samples will process.<br>"),
+	HTML("Upload a file containing the health data. It must excel xlsx format, the first column must be dates, and the first row must be headers. You can download an <a href='www.my-statistical-health.com/www/template.xlsx'>example template here</a>."),
 	
 	# textOutput("text1"),
-	textOutput("text2"),
-	htmlOutput("text3"),
+	# textOutput("text2"),
+	# htmlOutput("text3"),
 	endPanel(),
 			
 				
