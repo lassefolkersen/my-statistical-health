@@ -22,12 +22,8 @@ shinyUI(bootstrapPage(
   endPanel(),
   beginPanel('2/3'),
   
-  h2("Genetic risk score:"),
-  # htmlOutput("text_1"),
+  h2("Time series analysis:"),
   plotOutput("plot1"),
-  # htmlOutput("text_2"),
-  # dataTableOutput("table1"),
-  # htmlOutput("text_3"),
   
   
   

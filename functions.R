@@ -96,7 +96,7 @@ prepare_input_file<-function(path, email, filename, protect_from_deletion){
     write(m,file="/home/ubuntu/misc_files/submission_log.txt",append=TRUE)
     stop(safeError("The header of the first column must be 'date'."))
   }
-  if(colnames(d)[1]!="date"){colnames(d)[1]<-"date"
+  if(colnames(d)[1]!="date"){colnames(d)[1]<-"date"}
   
   
   
