@@ -1,7 +1,5 @@
 # stop(getwd())
-setwd("/home/ubuntu/srv/my-statistical-health/imputeme")
 source("../uifunctions.R")
-# source("/home/ubuntu/srv/my-statistical-health/uifunctions.R")
 initialize('hc',TRUE)
 
 shinyUI(bootstrapPage(
