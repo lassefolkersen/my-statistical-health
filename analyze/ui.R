@@ -26,6 +26,7 @@ shinyUI(bootstrapPage(
   
   h2("Time series analysis:"),
   plotOutput("plot1"),
+  plotOutput("plot2"),
   
   
   
