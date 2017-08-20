@@ -57,12 +57,19 @@ shinyServer(function(input, output) {
           print(paste("skipping",var,"because of too many missing values"))
           next
         }
-        d1<-d
-        d1[,"d"]<-as.numeric(d1[,"date"])
+        if(class(d[,var])=="character"){
+          d[,var] <- as.numeric(as.factor(d[,var])) #this won't work unless the variables are alphabetically sorted
+        }
+        
+        if(class(d[,var])=="factor"){
+          d[,var] <- as.numeric(d[,var]) #this won't work unless the variables are alphabetically sorted
+        }
+        
+        d[,"d"]<-as.numeric(d[,"date"])
         f2<-as.formula(paste0("var ~ d"))
-        l1<-try(loess(f2,d1,span=0.2))
+        l1<-try(loess(f2,d,span=0.2))
         if(class(l1)!="try-error"){
-          d[rownames(d1),paste0(var,"_loess")]<-l1$fitted
+          d[rownames(d),paste0(var,"_loess")]<-l1$fitted
         }else{
           print(paste("Didn't perform loess calc for",var))
         }
