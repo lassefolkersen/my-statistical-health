@@ -48,15 +48,6 @@ shinyServer(function(input, output) {
       
       
       for(var in variables){
-        if(length(grep("loess$",var))>0)next #don't calculate on an existing loess column
-        d[,"var"]<-as.numeric(d[,var])
-        #try to add some imputatin style stuff
-        w<-which(is.na(d[,"var"]))
-        d[w,"var"] <- d[w-1,"var"]
-        if(any(is.na(d[,"var"]))){
-          print(paste("skipping",var,"because of too many missing values"))
-          next
-        }
         if(class(d[,var])=="character"){
           d[,var] <- as.numeric(as.factor(d[,var])) #this won't work unless the variables are alphabetically sorted
         }
@@ -64,6 +55,17 @@ shinyServer(function(input, output) {
         if(class(d[,var])=="factor"){
           d[,var] <- as.numeric(d[,var]) #this won't work unless the variables are alphabetically sorted
         }
+        
+        d[,"var"]<-as.numeric(d[,var])
+        
+        #try to add some imputation style stuff
+        w<-which(is.na(d[,"var"]))
+        d[w,"var"] <- d[w-1,"var"]
+        if(any(is.na(d[,"var"]))){
+          print(paste("skipping",var,"because of too many missing values"))
+          next
+        }
+        
         
         d[,"d"]<-as.numeric(d[,"date"])
         f2<-as.formula(paste0("var ~ d"))
