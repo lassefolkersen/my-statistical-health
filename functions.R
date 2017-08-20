@@ -30,6 +30,7 @@ if(length(paypal)!=1)stop("paypal not length 1")
 
 prepare_input_file<-function(path, email, filename, protect_from_deletion){
   library(tools)
+  library(openxlsx)
   
   if(class(path)!="character")stop(paste("path must be character, not",class(path)))
   if(length(path)!=1)stop(paste("path must be lengh 1, not",length(path)))
@@ -55,38 +56,7 @@ prepare_input_file<-function(path, email, filename, protect_from_deletion){
     stop(safeError("At the current stage, the project is only open to backers. Please visit our kickstarter page at: http://kck.st/1VlrTlf - sorry for the inconvenience. Going forward the plan is to run on a more voluntary pricing basis, always as non-profit (see terms-of-use). No data was saved."))
   }
   
-  
-  # newUnzippedPath <- paste0("/home/ubuntu/bulkuploads/",format(Sys.time(),"%Y-%m-%d-%H-%M-%S"),"_input.txt")
-  # gunzipResults<-unzip(path,exdir="/home/ubuntu/bulkuploads/")
-  # gunzipResults<-grep("_MACOSX",gunzipResults,invert=T,value=T)
-  # if(length(gunzipResults)==1){ #then its a zip file
-  #   file.rename(gunzipResults, newUnzippedPath)		
-  # }else if(length(gunzipResults)>1){
-  #   stop(safeError("Don't submit zip files with more than one file in"))
-  # }else{ #then it's probably not
-  #   #check if it is a gz file
-  #   filetype<-system(paste("file ", path),intern=T)
-  #   if(length(grep("gzip compressed",filetype))==1){
-  #     stop(safeError("Don't submit gz-files. Only uncompressed text or zip-files. If you already know what a gz file is, this should be easy for you. Please format as tab separated text files."))
-  #   }else{
-  #     #otherwise just rename
-  #     file.rename(path, newUnzippedPath)		
-  #   }
-  # }
-  # path <- newUnzippedPath
-  
-  
-  o<-try(read.xlsx(path))
-  if(class(o)=="try-error"){
-      m<-c(format(Sys.time(),"%Y-%m-%d-%H-%M-%S"),"no_xlsx",email,uniqueID)
-      m<-paste(m,collapse="\t")
-      write(m,file="/home/ubuntu/misc_files/submission_log.txt",append=TRUE)
-      stop(safeError("The file didn't look like an xlsx file."))
-    
-  }
-  
-  
-  
+
   # Create uniqueID 
   uniqueID <- paste("id_",sample(1000:9000,1),sample(10000:90000,1),sep="")
   numberOfLetters<-sample(c(1,1,2,3),1)
@@ -107,6 +77,20 @@ prepare_input_file<-function(path, email, filename, protect_from_deletion){
     write(m,file="/home/ubuntu/misc_files/submission_log.txt",append=TRUE)
     stop(safeError("Problem with unique ID generation. Please re-load and try again."))
   }
+  
+
+  
+  o<-try(read.xlsx(path))
+  if(class(o)=="try-error"){
+      m<-c(format(Sys.time(),"%Y-%m-%d-%H-%M-%S"),"no_xlsx",email,uniqueID)
+      m<-paste(m,collapse="\t")
+      write(m,file="/home/ubuntu/misc_files/submission_log.txt",append=TRUE)
+      stop(safeError("The file didn't look like an xlsx file."))
+    
+  }
+  
+  
+  
 
   
   #create data folder  
