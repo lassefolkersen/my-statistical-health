@@ -56,24 +56,24 @@ prepare_input_file<-function(path, email, filename, protect_from_deletion){
   }
   
   
-  newUnzippedPath <- paste0("/home/ubuntu/bulkuploads/",format(Sys.time(),"%Y-%m-%d-%H-%M-%S"),"_input.txt")
-  gunzipResults<-unzip(path,exdir="/home/ubuntu/bulkuploads/")
-  gunzipResults<-grep("_MACOSX",gunzipResults,invert=T,value=T)
-  if(length(gunzipResults)==1){ #then its a zip file
-    file.rename(gunzipResults, newUnzippedPath)		
-  }else if(length(gunzipResults)>1){
-    stop(safeError("Don't submit zip files with more than one file in"))
-  }else{ #then it's probably not
-    #check if it is a gz file
-    filetype<-system(paste("file ", path),intern=T)
-    if(length(grep("gzip compressed",filetype))==1){
-      stop(safeError("Don't submit gz-files. Only uncompressed text or zip-files. If you already know what a gz file is, this should be easy for you. Please format as tab separated text files."))
-    }else{
-      #otherwise just rename
-      file.rename(path, newUnzippedPath)		
-    }
-  }
-  path <- newUnzippedPath
+  # newUnzippedPath <- paste0("/home/ubuntu/bulkuploads/",format(Sys.time(),"%Y-%m-%d-%H-%M-%S"),"_input.txt")
+  # gunzipResults<-unzip(path,exdir="/home/ubuntu/bulkuploads/")
+  # gunzipResults<-grep("_MACOSX",gunzipResults,invert=T,value=T)
+  # if(length(gunzipResults)==1){ #then its a zip file
+  #   file.rename(gunzipResults, newUnzippedPath)		
+  # }else if(length(gunzipResults)>1){
+  #   stop(safeError("Don't submit zip files with more than one file in"))
+  # }else{ #then it's probably not
+  #   #check if it is a gz file
+  #   filetype<-system(paste("file ", path),intern=T)
+  #   if(length(grep("gzip compressed",filetype))==1){
+  #     stop(safeError("Don't submit gz-files. Only uncompressed text or zip-files. If you already know what a gz file is, this should be easy for you. Please format as tab separated text files."))
+  #   }else{
+  #     #otherwise just rename
+  #     file.rename(path, newUnzippedPath)		
+  #   }
+  # }
+  # path <- newUnzippedPath
   
   
   o<-try(read.xlsx(path))
