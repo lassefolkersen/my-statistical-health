@@ -105,6 +105,13 @@ shinyServer(function(input, output) {
     
   })
   
+  output$plot2 <- renderPlot({
+    if(input$predictionButton > 0 | input$interactionButton > 0){
+     stop(safeError("These analysis modes are not implemented in interactive mode. Yet.")) 
+    }
+      
+      
+  })
 })
 
 

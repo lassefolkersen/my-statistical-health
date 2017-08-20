@@ -18,7 +18,9 @@ shinyUI(bootstrapPage(
     uiOutput("ui")
     
   ),
-  actionButton("goButton","Run analysis"),
+  actionButton("goButton","Plot data"),
+  actionButton("prediction","Prediction analysis"),
+  actionButton("interaction","Interaction analysis"),
   endPanel(),
   beginPanel('2/3'),
   
