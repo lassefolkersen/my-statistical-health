@@ -10,6 +10,12 @@ shinyUI(bootstrapPage(
   beginPanel('1/3'),
   HTML("Run analysis of data here.<br><br>To run analysis input your user-id, or use the test-value of id_5856884C1:<br>"),
   textInput(inputId="uniqueID", label = "Unique ID", value = "id_XXXXXXXXX"),
+  
+  
+  wellPanel(
+    # This outputs the dynamic UI component
+    uiOutput("ui")
+  ),
   # 
   # conditionalPanel(
   #   condition = "input.trait_group == 'all'",
