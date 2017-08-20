@@ -70,7 +70,7 @@ prepare_input_file<-function(path, email, filename, protect_from_deletion){
   }
   
   #check that it doesn't exists already
-  print(paste("create imputation folder and output data folder for",uniqueID,"sample",sampleName))
+  print(paste("create imputation folder and output data folder for",uniqueID))
   if(uniqueID%in%list.files("/home/ubuntu/data/")){
     m<-c(format(Sys.time(),"%Y-%m-%d-%H-%M-%S"),"double_id",email,uniqueID)
     m<-paste(m,collapse="\t")
