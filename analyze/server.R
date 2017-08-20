@@ -3,7 +3,7 @@ library("shiny")
 
 options(shiny.maxRequestSize=100*1024^2) 
 
-source("/home/ubuntu/srv/my-statistical-health/functions.R")
+# source("/home/ubuntu/srv/my-statistical-health/functions.R")
 
 
 
@@ -13,39 +13,27 @@ source("/home/ubuntu/srv/my-statistical-health/functions.R")
 shinyServer(function(input, output) {
 	
 	
-	
-	
-	output$text2 <- renderText({ 
-		# Take a dependency on input$goButton
-		
-		if(input$goButton == 0){
-			return("")
-		}else if(input$goButton == 1) {
-			return("")
-		}else{
-			stop(safeError("Please don't try to submit the job more than once. Re-load the page, re-upload and then only press 'start imputation' once."))
-		}
-		
-	})
-	
-	# get_data <- reactive({
-	#   
-	#   
-	#   
-	# })
-	
-	output$text3 <- renderText({ 
-		# Take a dependency on input$goButton
-		if(input$goButton == 1){
-			# path <- isolate(input$largeFile[["datapath"]])
-			# email <- isolate(input$email)
-			# protect_from_deletion <- TRUE
-			# filename <- isolate(input$largeFile[["name"]])
-			# if(is.null(path))return("No file selected")
-			# out<-prepare_input_file(path,email,filename, protect_from_deletion)
-			# return(out)
-		}
-	})
+  output$ui <- renderUI({
+    uniqueID <- gsub(" ","",input$uniqueID)
+    
+    
+    blank <- checkboxGroupInput("dynamic", "Variables to show",choices = NULL)
+    if(nchar(uniqueID)!=12 | length(grep("^id_",uniqueID))==0){
+      return(blank)
+      
+    }else{
+      f1 <- paste0("/home/ubuntu/data/",uniqueID,"/",uniqueID,".rdata")
+      if(!file.exists(f1)){
+        return(blank)
+      }else{
+        load(f1)  
+        out <-checkboxGroupInput("dynamic", "Dynamic",choices = colnames(d))
+        return(out)
+        
+      }
+      
+    }
+  })
 })
 
 
