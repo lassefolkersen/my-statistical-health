@@ -110,7 +110,6 @@ prepare_input_file<-function(path, email, filename, protect_from_deletion){
   
 
   #clean up    
-  unlink(newUnzippedPath)
   unlink(path)
   return(paste0("Data file succesfully submitted. You can now go to the analysis interface and look at your data using the uniqueID <i>",uniqueID,"</i>"))
   
