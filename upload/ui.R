@@ -20,7 +20,7 @@ shinyUI(bootstrapPage(
 	
 	endPanel(),
 	beginPanel('2/3'),
-	HTML("Upload a file containing the health data. It must excel xlsx format, the first column must be dates, and the first row must be headers. You can download an <u><a href='www/template.xlsx'>example template here</a></u>."),
+	HTML("Upload a file containing the health data. It must excel xlsx format, the first column must be dates, and the first row must be headers. You can download an <u><a href='www/template.xlsx'>example template here</a></u>. Further details can be found at <u><a href='https://github.com/lassefolkersen/my-statistical-health'>github in the development-repository</a></u>."),
 	
 	
 	textOutput("text2"),
