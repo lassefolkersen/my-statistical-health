@@ -40,31 +40,53 @@ shinyServer(function(input, output) {
     if(input$goButton > 0){
       variables <- isolate(input$dynamic)
       
-      stop(safeError(paste(variables,collapse=", ")))
-      # for(x in colnames(d)[2:ncol(d)]){
-      #   if(length(grep("loess$",x))>0)next #don't calculate on an existing loess column
-      #   d[,"var"]<-as.numeric(d[,x])
-      #   #try to add some imputatin style stuff
-      #   w<-which(is.na(d[,"var"]))
-      #   d[w,"var"] <- d[w-1,"var"]
-      #   if(any(is.na(d[,"var"]))){
-      #     print(paste("skipping",x,"because of too many missing values")) 
-      #     next
-      #   }
-      #   d1<-d
-      #   
-      #   
-      #   d1[,"d"]<-as.numeric(d1[,"date"])
-      #   f2<-as.formula(paste0("var ~ d"))
-      #   l1<-try(loess(f2,d1,span=0.2))
-      #   if(class(l1)!="try-error"){
-      #     d[rownames(d1),paste0(x,"_loess")]<-l1$fitted
-      #   }else{
-      #     print(paste("Didn't perform loess calc for",x))
-      #   }
-      # }
-      # 
+      for(x in variables){
+        if(length(grep("loess$",x))>0)next #don't calculate on an existing loess column
+        d[,"var"]<-as.numeric(d[,x])
+        #try to add some imputatin style stuff
+        w<-which(is.na(d[,"var"]))
+        d[w,"var"] <- d[w-1,"var"]
+        if(any(is.na(d[,"var"]))){
+          print(paste("skipping",x,"because of too many missing values"))
+          next
+        }
+        d1<-d
+        d1[,"d"]<-as.numeric(d1[,"date"])
+        f2<-as.formula(paste0("var ~ d"))
+        l1<-try(loess(f2,d1,span=0.2))
+        if(class(l1)!="try-error"){
+          d[rownames(d1),paste0(x,"_loess")]<-l1$fitted
+        }else{
+          print(paste("Didn't perform loess calc for",x))
+        }
+      }
+
       
+      # n1<-0.4
+      library(RColorBrewer)
+      col<-rep(brewer.pal(12,"Set3"),ceiling(length(variables)/12))
+          
+      
+      r <-data.frame(
+        request=  variables,
+        col = col[1:length(variables)],
+        lwd = rep(1,length(variables)),
+        stringsAsFactors = F
+      )
+      
+      plot(x=d[,"date"],y=rep(0,nrow(d)),type="n",xlab="",ylab="",yaxt="n",ylim=c(0,1))
+      for(i in 1:nrow(r)){
+        data <- d[,paste0(r[i,"request"],"_loess")]
+        data_norm <- (data-min(data)) / (max(data)-min(data))
+        lines(d[,"date"], y=data_norm,col=r[i,"col"], lwd=r[i,"lwd"])
+      }
+      # frame()
+      
+      # legend("topleft",legend=sub(" \\(.+$","",gsub("\\."," ",r[,"request"])),lwd=r[,"lwd"],col=r[,"col"])
+      
+      # dev.off()
+      
+            
     }
     
   })
