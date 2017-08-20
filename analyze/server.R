@@ -43,6 +43,10 @@ shinyServer(function(input, output) {
       f1 <- paste0("/home/ubuntu/data/",uniqueID,"/",uniqueID,".rdata")
       load(f1)  
       
+      #remove any empty rows
+      d<-d[apply(is.na(d),1,sum) < ncol(d)-1,]
+      
+      
       for(x in variables){
         if(length(grep("loess$",x))>0)next #don't calculate on an existing loess column
         d[,"var"]<-as.numeric(d[,x])
@@ -83,11 +87,9 @@ shinyServer(function(input, output) {
         data_norm <- (data-min(data)) / (max(data)-min(data))
         lines(d[,"date"], y=data_norm,col=r[i,"col"], lwd=r[i,"lwd"])
       }
-      # frame()
       
-      # legend("topleft",legend=sub(" \\(.+$","",gsub("\\."," ",r[,"request"])),lwd=r[,"lwd"],col=r[,"col"])
+      legend("topright",legend=sub(" \\(.+$","",gsub("\\."," ",r[,"request"])),lwd=r[,"lwd"],col=r[,"col"],bty="n")
       
-      # dev.off()
       
             
     }
