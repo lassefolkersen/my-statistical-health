@@ -9,7 +9,7 @@ shinyUI(bootstrapPage(
   titlePanel("Health analyzer"),
   beginPage(),	
   beginPanel('1/3'),
-  HTML("Run analysis of data here.<br><br>To run analysis input your user-id, or use the test-value of id_5909468R3:<br>"),
+  HTML("To run analysis input your user-id, or use the test-value of id_5909468R3:<br>"),
   textInput(inputId="uniqueID", label = "Unique ID", value = "id_XXXXXXXXX"),
   
   

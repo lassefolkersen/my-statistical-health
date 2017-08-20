@@ -10,7 +10,7 @@ shinyUI(bootstrapPage(
 	beginPanel('1/3'),
 	fileInput("largeFile", "Upload genome data", multiple = FALSE, accept = NULL),
 	textInput(inputId="email", label = "Email", value = "lassefolkersen@gmail.com"),
-	HTML("<u><a href='http://www.my-statistical-health.com/www/terms_of_use.html'>Terms of use.</a></u>"),
+	HTML("<u><a href='www/terms_of_use.html'>Terms of use.</a></u>"),
 	checkboxInput("delete2weeks", "Delete data after two weeks", value = TRUE, width = NULL),
 	actionButton("goButton","Send data to analysis"),
 	
@@ -20,7 +20,7 @@ shinyUI(bootstrapPage(
 	
 	endPanel(),
 	beginPanel('2/3'),
-	HTML("Upload a file containing the health data. It must excel xlsx format, the first column must be dates, and the first row must be headers. You can download an <a href='www.my-statistical-health.com/www/template.xlsx'>example template here</a>."),
+	HTML("Upload a file containing the health data. It must excel xlsx format, the first column must be dates, and the first row must be headers. You can download an <u><a href='www/template.xlsx'>example template here</a></u>."),
 	
 	
 	textOutput("text2"),
