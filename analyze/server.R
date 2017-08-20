@@ -40,6 +40,9 @@ shinyServer(function(input, output) {
     if(input$goButton > 0){
       variables <- isolate(input$dynamic)
       
+      f1 <- paste0("/home/ubuntu/data/",uniqueID,"/",uniqueID,".rdata")
+      load(f1)  
+      
       for(x in variables){
         if(length(grep("loess$",x))>0)next #don't calculate on an existing loess column
         d[,"var"]<-as.numeric(d[,x])

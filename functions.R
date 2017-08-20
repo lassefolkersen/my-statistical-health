@@ -29,7 +29,7 @@ if(length(paypal)!=1)stop("paypal not length 1")
 
 
 prepare_input_file<-function(path, email, filename, protect_from_deletion){
-  # library(tools)
+  library(tools)
   library(openxlsx)
   
   if(class(path)!="character")stop(paste("path must be character, not",class(path)))
