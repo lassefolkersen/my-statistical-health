@@ -38,7 +38,7 @@ shinyServer(function(input, output) {
     
     #take dependency
     if(input$goButton > 0){
-      variables <- input$dynamic
+      variables <- isolate(input$dynamic)
       
       stop(safeError(paste(variables,collapse=", ")))
       # for(x in colnames(d)[2:ncol(d)]){
