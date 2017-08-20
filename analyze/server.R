@@ -26,14 +26,14 @@ shinyServer(function(input, output) {
       }else{
         load(f1)  
         c1 <- colnames(d)[2:ncol(d)]
-        out <-checkboxGroupInput("dynamic", "Dynamic",choices = c1)
+        out <-checkboxGroupInput("dynamic", "Variables to show",choices = c1)
         return(out)
       }
     }
   })
   
   
-  output$plot1 <- renderUI({
+  output$plot1 <- renderPlot({
     uniqueID <- isolate(gsub(" ","",input$uniqueID))
     
     #take dependency
@@ -47,14 +47,14 @@ shinyServer(function(input, output) {
       d<-d[apply(is.na(d),1,sum) < ncol(d)-1,]
       
       
-      for(x in variables){
-        if(length(grep("loess$",x))>0)next #don't calculate on an existing loess column
-        d[,"var"]<-as.numeric(d[,x])
+      for(var in variables){
+        if(length(grep("loess$",var))>0)next #don't calculate on an existing loess column
+        d[,"var"]<-as.numeric(d[,var])
         #try to add some imputatin style stuff
         w<-which(is.na(d[,"var"]))
         d[w,"var"] <- d[w-1,"var"]
         if(any(is.na(d[,"var"]))){
-          print(paste("skipping",x,"because of too many missing values"))
+          print(paste("skipping",var,"because of too many missing values"))
           next
         }
         d1<-d
@@ -62,9 +62,9 @@ shinyServer(function(input, output) {
         f2<-as.formula(paste0("var ~ d"))
         l1<-try(loess(f2,d1,span=0.2))
         if(class(l1)!="try-error"){
-          d[rownames(d1),paste0(x,"_loess")]<-l1$fitted
+          d[rownames(d1),paste0(var,"_loess")]<-l1$fitted
         }else{
-          print(paste("Didn't perform loess calc for",x))
+          print(paste("Didn't perform loess calc for",var))
         }
       }
 
