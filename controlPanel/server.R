@@ -56,7 +56,7 @@ shinyServer(function(input, output) {
     }
     
     barplot(t(out),beside=T,horiz=T,xlab="% of days")
-    legend("topright",legend=c("last week","last month","last year"),pch=19,col=c("grey40","grey70","grey90"))
+    legend("topright",legend=rev(c("last week","last month","last year")),pch=19,col=rev(c("grey40","grey70","grey90")))
     
     
       
