@@ -1,4 +1,5 @@
 library("shiny")
+library("dplyr")
 library("googlesheets")
 
 
@@ -17,7 +18,7 @@ shinyServer(function(input, output) {
 	
   
   output$plot1 <- renderPlot({
-    dates<-data %>% collect %>% .[["X1"]]
+    dates<-data %>% collect %>% .[[1]]
     cons<-data %>% collect %>% .[[16]]
     figh<-data %>% collect %>% .[[18]]
      
