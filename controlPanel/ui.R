@@ -6,7 +6,7 @@ initialize('hc',TRUE)
 shinyUI(bootstrapPage(
   head(),
   navigation(),
-  titlePanel("Control Panel"),
+  titlePanel("老公操作台"),
   beginPage(),	
   # beginPanel('1/3'),
   # textInput(inputId="uniqueID", label = "Unique ID", value = "id_XXXXXXXXX"),
