@@ -14,7 +14,7 @@ shinyUI(bootstrapPage(
   # beginPanel('2/3'),
   
   # h2("Current status:"),
-  plotOutput("plot1"),
+  plotOutput("plot1",height="800px"),
   # htmlOutput("text1"),
   # plotOutput("plot2"),
   
