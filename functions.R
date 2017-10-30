@@ -26,6 +26,11 @@ if(!is.character(routinely_delete_this))stop("routinely_delete_this not characte
 if(!exists("paypal"))stop("Didn't find paypal")
 if(!is.character(paypal))stop("paypal not character")
 if(length(paypal)!=1)stop("paypal not length 1")
+if(!exists("gdoc"))stop("Didn't find gdoc")
+if(!is.character(gdoc))stop("gdoc not character")
+if(length(gdoc)!=1)stop("gdoc not length 1")
+
+
 
 
 prepare_input_file<-function(path, email, filename, protect_from_deletion){
