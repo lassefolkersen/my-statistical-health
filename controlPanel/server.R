@@ -63,7 +63,7 @@ shinyServer(function(input, output) {
   
   
   output$text1 <- renderText({ 
-    if(is.null(input$export) || input$export == 0){
+    if(is.null(input$goButton) || input$goButton == 0){
       return("")
     }else if(input$goButton > 1) {
       return("Don't click the button more than once. Reload page to reset.")

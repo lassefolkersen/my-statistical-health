@@ -18,7 +18,7 @@ shinyUI(bootstrapPage(
   
   # plotOutput("plot2"),
   
-  actionButton("export","Send data for further analysis"),
+  actionButton("goButton","Send data for further analysis"),
   htmlOutput("text1"),
   
   endPage(),
