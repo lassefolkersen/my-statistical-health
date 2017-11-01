@@ -80,13 +80,17 @@ shinyServer(function(input, output) {
       
       # n1<-0.4
       library(RColorBrewer)
-      col<-rep(brewer.pal(12,"Set3"),ceiling(length(variables)/12))
-          
+      col<-brewer.pal(12,"Set3")
+      col<-col[c(1,3:12,2)]  #don't use yellow so early
+      col<-rep(col,ceiling(length(variables)/12))
+      
+      lwd <- c(rep(2,4),rep(1,8))
+      lwd<-rep(lwd,ceiling(length(variables)/12))
       
       r <-data.frame(
         request=  variables,
         col = col[1:length(variables)],
-        lwd = rep(1,length(variables)),
+        lwd = lwd[1:length(variables)],
         stringsAsFactors = F
       )
       
