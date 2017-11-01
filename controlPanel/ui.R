@@ -15,12 +15,12 @@ shinyUI(bootstrapPage(
   
   # h2("Current status:"),
   plotOutput("plot1",height="800px"),
-  # htmlOutput("text1"),
+  
   # plotOutput("plot2"),
   
+  actionButton("export","Send data for further analysis"),
+  htmlOutput("text1"),
   
-  
-  # endPanel(),
   endPage(),
   footer()
   

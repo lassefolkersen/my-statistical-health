@@ -6,7 +6,7 @@ library("googlesheets")
 
 source("/home/ubuntu/srv/my-statistical-health/functions.R")
 gs_auth(token = gdoc)
-gs_ls()
+# gs_ls()
 sheet <- gs_title("The breath-test")
 data<-gs_read(sheet)
 
@@ -57,10 +57,41 @@ shinyServer(function(input, output) {
     
     barplot(t(out),beside=T,horiz=T,xlab="% of days")
     legend("topright",legend=rev(c("last week","last month","last year")),pch=19,col=rev(c("grey40","grey70","grey90")))
-    
-    
-      
+
   })
+  
+  
+  
+  output$text1 <- renderText({ 
+    if(input$export == 0){
+      return("")
+    }else if(input$goButton > 1) {
+      return("Don't click the button more than once. Reload page to reset.")
+    }else{
+
+      #dplyr explorter
+      out<-data.frame(matrix(ncol=ncol(data),nrow=nrow(data)-1,dimnames=list(NULL,t(data)[,1])))
+      for(i in 1:ncol(data)){
+        d<-data %>% collect %>% .[[i]]
+        out[,i] <- d[2:length(d)]
+      }
+      out[,"date"] <- as.Date(out[,"date"])
+      
+      
+      #save as 'input file'
+      temp_file_name <- paste0(format(Sys.time(),"%Y-%m-%d_%H-%M-%S"),"-temp_file.xlsx")
+      library(openxlsx)
+      write.xlsx(out,file=temp_file_name)
+      out_text<-prepare_input_file(path=temp_file_name, email="lassefolkersen@gmail.com", filename="google-doc", protect_from_deletion=T)
+      # uniqueID<-sub("</i>$","",sub("^.+<i>","",out_text))
+      
+      
+      return(out_text)
+    }
+  })
+    
+  
+  
 })
 
 
