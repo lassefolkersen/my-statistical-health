@@ -63,7 +63,7 @@ shinyServer(function(input, output) {
   
   
   output$text1 <- renderText({ 
-    if(input$export == 0){
+    if(is.null(input$export) || input$export == 0){
       return("")
     }else if(input$goButton > 1) {
       return("Don't click the button more than once. Reload page to reset.")
@@ -75,6 +75,7 @@ shinyServer(function(input, output) {
         d<-data %>% collect %>% .[[i]]
         out[,i] <- d[2:length(d)]
       }
+      colnames(out)[1]<-"date"
       out[,"date"] <- as.Date(out[,"date"])
       
       
