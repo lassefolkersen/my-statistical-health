@@ -198,7 +198,7 @@ shinyServer(function(input, output) {
   output$text1 <- renderText({
     time_lag <- input$time_lag
     c1<-get_correlations()
-    if(!is.null(out)){
+    if(!is.null(c1)){
       
       #getting the best no lag corr
       no_lag<-t(c1["0",2:ncol(c1)])
@@ -234,13 +234,13 @@ shinyServer(function(input, output) {
   
   
   output$table1 <- renderDataTable({
-    out<-get_correlations()
-    if(!is.null(out)){
-      for(i in 2:ncol(out)){
-        out[,i] <- signif(out[,i],2)
+    c1<-get_correlations()
+    if(!is.null(c1)){
+      for(i in 2:ncol(c1)){
+        c1[,i] <- signif(c1[,i],2)
       }
-      colnames(out)[1] <- "Time lag"
-      return(out)
+      colnames(c1)[1] <- "Time lag"
+      return(c1)
     }
   })
   
