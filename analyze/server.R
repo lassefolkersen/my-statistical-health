@@ -157,7 +157,7 @@ shinyServer(function(input, output) {
   
   output$table1 <- renderDataTable({
     uniqueID <- gsub(" ","",input$uniqueID)
-    variables <- input$dynamic)
+    variables <- input$dynamic
     time_lag <- input$time_lag
     
     #take dependency
