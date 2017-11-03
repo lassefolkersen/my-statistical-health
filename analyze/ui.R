@@ -34,6 +34,7 @@ shinyUI(bootstrapPage(
   
   h2("Time series analysis:"),
   plotOutput("plot1"),
+  htmlOutput("text1"),
   dataTableOutput("table1"),
   
   

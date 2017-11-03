@@ -13,7 +13,7 @@ shinyServer(function(input, output) {
   
   output$ui_choices <- renderUI({
     input$uniqueID #update when uniqueID changes
-    d<-get_data_1()
+    d<-get_data_for_ui()
     if(is.null(d)){
       out = checkboxGroupInput("dynamic", "Variables to show",choices = NULL)  
     }else{
@@ -22,10 +22,10 @@ shinyServer(function(input, output) {
     }
     return(out)
   })
-    
+  
   output$ui_slider <- renderUI({
     input$uniqueID #update when uniqueID changes
-    d<-get_data_1()
+    d<-get_data_for_ui()
     
     if(is.null(d)){
       out = sliderInput("time_window", "Time Window",min = 0, max = 10,value = c(1,9), step = 1)
@@ -35,11 +35,11 @@ shinyServer(function(input, output) {
     }
     return(out)
   })
-   
+  
   
   
   #just get the data - nothing more (for UI components)
-  get_data_1 <- reactive({
+  get_data_for_ui <- reactive({
     uniqueID <- gsub(" ","",input$uniqueID)
     
     #get the data
@@ -54,15 +54,16 @@ shinyServer(function(input, output) {
   
   
   #get the data and clean it a bit - (for analytical components)
-  get_data_2 <- reactive({
+  get_all_data <- reactive({
     variables <- input$dynamic
     uniqueID <- gsub(" ","",input$uniqueID)
-
+    time_window <- input$time_window
+    
     if(nchar(uniqueID)!=12 | length(grep("^id_",uniqueID))==0){
       stop(safeError("uniqueID must be a 12 digit identifier starting with id_")) 
     }
     
-    d<-get_data_1()
+    d<-get_data_for_ui()
     if(is.null(d)){
       Sys.sleep(2)
       stop(safeError(paste("This uniqueID does not exists")) )
@@ -72,7 +73,13 @@ shinyServer(function(input, output) {
     d<-d[apply(is.na(d),1,sum) < ncol(d)-1,]
     
     
-    #iterate over variables, forcing all to become numeric, light-imputation, and loess for all
+    #subset to time_window if requested
+    if(class(time_window)=="Date"){
+      d<-d[d[,"date"] >= time_window[1] & d[,"date"] <= time_window[2],]
+      if(nrow(d)<1)stop(safeError("No data lines to plot - perhaps increase time window?"))
+    }
+    
+    #iterate over variables, forcing all to become numeric, also "light"-imputation, and loess for all
     for(var in variables){
       if(class(d[,var])=="character"){
         d[,var] <- as.numeric(as.factor(d[,var])) #this won't work unless the variables are alphabetically sorted
@@ -104,29 +111,20 @@ shinyServer(function(input, output) {
     }
     return(d)
   })
-
   
   
-    
+  
+  
   
   
   output$plot1 <- renderPlot({
     uniqueID <- gsub(" ","",input$uniqueID)
     variables <- input$dynamic
-    time_window <- input$time_window
+    
     
     #take dependency
     if(input$goButton > 0 & !is.null(variables)){
-      d<-get_data_2()
-      
-      
-      #subset to requested time window
-      if(class(time_window)!="Date"){
-        print(time_window)
-         stop("Time_window must be of class date")
-      }
-      d<-d[d[,"date"] >= time_window[1] & d[,"date"] <= time_window[2],]
-      if(nrow(d)<1)stop(safeError("No data lines to plot - perhaps increase time window?"))
+      d<-get_all_data()
       
       #set colours
       library(RColorBrewer)
@@ -155,16 +153,17 @@ shinyServer(function(input, output) {
     }
   })
   
-  output$table1 <- renderDataTable({
-    uniqueID <- gsub(" ","",input$uniqueID)
+  
+  
+  
+  
+  get_correlations <- reactive({
     variables <- input$dynamic
     time_lag <- input$time_lag
     
-    #take dependency
     if(input$goButton > 0 & input$do_correlation){
-      
       #get data
-      d<-get_data_2()
+      d<-get_all_data()
       
       #get comparisons
       c2<-data.frame(t(combn(variables,2)),stringsAsFactors = F)
@@ -179,21 +178,42 @@ shinyServer(function(input, output) {
         nrow=time_lag*2+1, 
         dimnames=list(seq(-time_lag,time_lag),c("time_lag",c2[,"name"]))),check.names=F)
       out[,"time_lag"] <- rownames(out)
-
+      
       for(j in 1:nrow(c2)){
         var1<-c2[j,"var1"]
         var2<-c2[j,"var2"]  
         
         #removing rows that are NA for these two variables
         d1<-d[apply(is.na(d[,c(var1,var2)]),1,sum)==0,]
-
+        
         #calculate correlation
         corr<-ccf(d1[,var1],d1[,var2],plot = F, lag.max=time_lag)
         out[,c2[j,"name"]] <- corr[["acf"]][,,1]
       }
-    return(out)
+      return(out)
     }
   })
+  
+  output$text1 <- renderDataTable({
+    out<-get_correlations()
+    if(!is.null(out)){
+      return(paste("a table with",nrow(out),"lines"))  
+    }
+    
+  })
+  
+  
+  
+  output$table1 <- renderDataTable({
+    out<-get_correlations()
+    if(!is.null(out)){
+      return(out)
+    }
+  })
+  
+  
+  
+  
 })
 
 
