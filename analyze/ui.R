@@ -17,7 +17,7 @@ shinyUI(bootstrapPage(
   wellPanel(
     uiOutput("ui_choices")
   ),
-  actionButton("goButton","Plot data"),
+  actionButton("goButton","Analyze data"),
   checkboxInput("do_correlation", label ="Analyze correlation", value = FALSE),
   checkboxInput("advanced", label ="Advanced options", value = FALSE),
   conditionalPanel(
@@ -34,7 +34,7 @@ shinyUI(bootstrapPage(
   
   h2("Time series analysis:"),
   plotOutput("plot1"),
-  plotOutput("plot2"),
+  dataTableOutput("table1"),
   
   
   

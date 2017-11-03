@@ -46,14 +46,10 @@ shinyServer(function(input, output) {
   get_data_1 <- reactive({
     uniqueID <- gsub(" ","",input$uniqueID)
     
-    if(nchar(uniqueID)!=12 | length(grep("^id_",uniqueID))==0){
-      stop(safeError("uniqueID must be a 12 digit identifier starting with id_")) 
-    }
     #get the data
     f1 <- paste0("/home/ubuntu/data/",uniqueID,"/",uniqueID,".rdata")
     if(!file.exists(f1)){
-      Sys.sleep(1)
-      stop(safeError(paste("This uniqueID",uniqueID,"does not exists")) )
+      return(NULL)
     }
     load(f1)  
     #remove any completely empty rows
@@ -64,9 +60,18 @@ shinyServer(function(input, output) {
   #get the data and clean it a bit - (for analytical components)
   get_data_2 <- reactive({
     variables <- isolate(input$dynamic)
+    uniqueID <- gsub(" ","",input$uniqueID)
 
+    if(nchar(uniqueID)!=12 | length(grep("^id_",uniqueID))==0){
+      stop(safeError("uniqueID must be a 12 digit identifier starting with id_")) 
+    }
+    
     d<-get_data_1()
-
+    if(is.null(d)){
+      Sys.sleep(2)
+      stop(safeError(paste("This uniqueID does not exists")) )
+    }
+    
     #remove any completely empty rows
     d<-d[apply(is.na(d),1,sum) < ncol(d)-1,]
     
@@ -112,11 +117,18 @@ shinyServer(function(input, output) {
   output$plot1 <- renderPlot({
     uniqueID <- isolate(gsub(" ","",input$uniqueID))
     variables <- isolate(input$dynamic)
+    time_window <- isolate(input$time_window)
     
     #take dependency
     if(input$goButton > 0 & !is.null(variables)){
       d<-get_data_2()
       
+      
+      #subset to requested time window
+      d<-d[d[,"date"] >= time_window[1] & d[,"date"] <= time_window[2],]
+      
+      
+      #set colours
       library(RColorBrewer)
       col<-brewer.pal(12,"Set3")
       col<-col[c(1,3:12,2)]  #don't use yellow so early
@@ -149,7 +161,7 @@ shinyServer(function(input, output) {
     time_lag <- isolate(input$time_lag)
     
     #take dependency
-    if(input$predictionButton > 0){
+    if(input$goButton > 0){
       
       #get data
       d<-get_data_2()
