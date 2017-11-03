@@ -107,7 +107,7 @@ shinyServer(function(input, output) {
     variables <- isolate(input$dynamic)
     
     #take dependency
-    if(input$goButton > 0){
+    if(input$goButton > 0 & !is.null(variables)){
       d<-get_data()
       
       library(RColorBrewer)
