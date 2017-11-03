@@ -55,7 +55,7 @@ shinyServer(function(input, output) {
   
   #get the data and clean it a bit - (for analytical components)
   get_data_2 <- reactive({
-    variables <- isolate(input$dynamic)
+    variables <- input$dynamic
     uniqueID <- gsub(" ","",input$uniqueID)
 
     if(nchar(uniqueID)!=12 | length(grep("^id_",uniqueID))==0){
@@ -161,7 +161,7 @@ shinyServer(function(input, output) {
     time_lag <- isolate(input$time_lag)
     
     #take dependency
-    if(input$goButton > 0){
+    if(input$goButton > 0 & input$do_correlation){
       
       #get data
       d<-get_data_2()
