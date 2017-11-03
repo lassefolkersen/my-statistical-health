@@ -174,9 +174,9 @@ shinyServer(function(input, output) {
       
       #prepare output table
       out<-data.frame(matrix(NA,
-        ncol=nrow(c2)+1,
-        nrow=time_lag*2+1, 
-        dimnames=list(seq(-time_lag,time_lag),c("time_lag",c2[,"name"]))),check.names=F)
+                             ncol=nrow(c2)+1,
+                             nrow=time_lag*2+1, 
+                             dimnames=list(seq(-time_lag,time_lag),c("time_lag",c2[,"name"]))),check.names=F)
       out[,"time_lag"] <- rownames(out)
       
       for(j in 1:nrow(c2)){
@@ -200,32 +200,71 @@ shinyServer(function(input, output) {
     c1<-get_correlations()
     if(!is.null(c1)){
       
-      #getting the best no lag corr
+      #getting the best no lag positive correlation
       no_lag<-t(c1["0",2:ncol(c1)])
-      no_lag<-no_lag[order(abs(no_lag[,1]),decreasing = T),,drop=F]
-      best_no_lag<-rownames(no_lag)[1]
+      no_lag<-no_lag[order((no_lag[,1]),decreasing = T),,drop=F]
+      best_no_lag_label<-rownames(no_lag)[1]
+      best_no_lag_magnitude<-signif(no_lag[1,1],2)
       
-      #if no time lag, just return
-      if(time_lag==0){
-        #composing message
-        message <- paste0("<br>The strongest correlation seems to be ",best_no_lag,".<br>")
-      
-        
-      #getting the best any corr
-        }else{
-        c2<-c1[order(apply(abs(c1[,2:ncol(c1)]),1,max),decreasing=T),]
-        best_lag_t <- rownames(c2)[1]
-        lag<-t(c2[best_lag_t,2:ncol(c2)])
-        lag<-lag[order(abs(lag[,1]),decreasing = T),,drop=F]
-        best_lag_c<-rownames(lag)[1]
+      #getting the best any-lag positive correlation
+      if(time_lag>0){
+        c2<-c1[order(apply((c1[,2:ncol(c1),drop=F]),1,max),decreasing=T),]
+        best_lag_time <- rownames(c2)[1]
+        lag<-t(c2[best_lag_time,2:ncol(c2)])
+        lag<-lag[order((lag[,1]),decreasing = T),,drop=F]
+        best_lag_label<-rownames(lag)[1]
+        best_lag_magnitude<-signif(c2[best_lag_time,best_lag_label],2)
+      }
       
       
-        message <- paste0("The strongest same-day correlation seems to be ",best_no_lag,". When also searching for correlations before or after ('time-lag'), the strongest correlation seems to be ",best_lag_c," at time ",best_lag_t,".<br>")
+      #getting the best no lag pos/neg correlation
+      no_lag<-t(c1["0",2:ncol(c1)])
+      no_lag<-no_lag[order((no_lag[,1]),decreasing = F),,drop=F]
+      best_no_lag_neg_label<-rownames(no_lag)[1]
+      best_no_lag_neg_magnitude<-signif(no_lag[1,1],2)
+      
+      
+      #getting the best any-lag positive correlation
+      if(time_lag>0){
+        c2<-c1[order(apply(-(c1[,2:ncol(c1),drop=F]),1,max),decreasing=T),]
+        best_lag_neg_time <- rownames(c2)[1]
+        lag<-t(c2[best_lag_neg_time,2:ncol(c2)])
+        lag<-lag[order((lag[,1]),decreasing = T),,drop=F]
+        best_lag_neg_label<-rownames(lag)[1]
+        best_lag_neg_magnitude<-signif(c2[best_lag_neg_time,best_lag_neg_label],2)
       }
       
       
       
+      #composing message
+      message <- paste0("The most positive same-day cross-correlation seems to be <i>",best_no_lag_label,"</i> at strength ",best_no_lag_magnitude,".")
       
+      #if there's any <0 findings we also add a negative message
+      if(best_no_lag_neg_magnitude < 0){
+        message <- paste0(message," The most negative same-day cross-correlation seems to be <i>",best_no_lag_neg_label,"</i> at strength ",best_no_lag_neg_magnitude,".")
+      }
+      
+      
+      #if there was more time_lag we also add that search
+      
+      if(time_lag > 0){  
+        intro <- " When also searching for correlations before or after day-0 ('time-lag') we found that"
+        message <- paste0(message,intro) 
+
+        if(best_lag_time != 0){  
+          message <- paste0(message," the most positive cross-correlation seems to be <i>",best_lag_label,"</i> at time ",best_lag_time," having strength ",best_lag_magnitude,".")
+        }        
+        
+        if(best_lag_neg_time != 0 & best_lag_neg_magnitude < 0){
+          message <- paste0(message," the most negative time-lag cross-correlation seems to be <i>",best_lag_neg_label,"</i> at time ",best_lag_neg_time," having strength ",best_lag_neg_magnitude,".")
+        }
+        #don't include intro if nothing found
+        message<-sub(paste0(intro,"$"),"",message)
+      }
+      
+      
+      #add some line spacing
+      message <- paste0("<br><br>",message,"<br><br>")
       return(message)  
     }
     
