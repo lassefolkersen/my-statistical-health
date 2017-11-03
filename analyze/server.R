@@ -248,7 +248,7 @@ shinyServer(function(input, output) {
       #if there was more time_lag we also add that search
       
       if(time_lag > 0){  
-        intro <- " When also searching for correlations before or after day-0 ('time-lag') we found that"
+        intro <- " When searching for time-lagged correlations we found that"
         message <- paste0(message,intro) 
 
         if(best_lag_time != 0){  
@@ -258,6 +258,7 @@ shinyServer(function(input, output) {
         if(best_lag_neg_time != 0 & best_lag_neg_magnitude < 0){
           message <- paste0(message," the most negative time-lag cross-correlation seems to be <i>",best_lag_neg_label,"</i> at time ",best_lag_neg_time," having strength ",best_lag_neg_magnitude,".")
         }
+        
         #don't include intro if nothing found
         message<-sub(paste0(intro,"$"),"",message)
       }
