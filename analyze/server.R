@@ -194,10 +194,10 @@ shinyServer(function(input, output) {
     }
   })
   
-  output$text1 <- renderDataTable({
+  output$text1 <- renderText({
     out<-get_correlations()
     if(!is.null(out)){
-      return(paste("a table with",nrow(out),"lines"))  
+      return(paste("<br>a table with",nrow(out),"lines<br><br>"))  
     }
     
   })
@@ -207,6 +207,10 @@ shinyServer(function(input, output) {
   output$table1 <- renderDataTable({
     out<-get_correlations()
     if(!is.null(out)){
+      for(i in 2:ncol(out)){
+        out[,i] <- signif(out[,i],2)
+      }
+      
       return(out)
     }
   })
