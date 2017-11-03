@@ -210,7 +210,7 @@ shinyServer(function(input, output) {
       if(time_lag>0){
         c2<-c1[order(apply((c1[,2:ncol(c1),drop=F]),1,max),decreasing=T),]
         best_lag_time <- rownames(c2)[1]
-        lag<-t(c2[best_lag_time,2:ncol(c2)])
+        lag<-t(c2[best_lag_time,2:ncol(c2),drop=F])
         lag<-lag[order((lag[,1]),decreasing = T),,drop=F]
         best_lag_label<-rownames(lag)[1]
         best_lag_magnitude<-signif(c2[best_lag_time,best_lag_label],2)
@@ -228,7 +228,7 @@ shinyServer(function(input, output) {
       if(time_lag>0){
         c2<-c1[order(apply(-(c1[,2:ncol(c1),drop=F]),1,max),decreasing=T),]
         best_lag_neg_time <- rownames(c2)[1]
-        lag<-t(c2[best_lag_neg_time,2:ncol(c2)])
+        lag<-t(c2[best_lag_neg_time,2:ncol(c2),drop=F])
         lag<-lag[order((lag[,1]),decreasing = T),,drop=F]
         best_lag_neg_label<-rownames(lag)[1]
         best_lag_neg_magnitude<-signif(c2[best_lag_neg_time,best_lag_neg_label],2)
@@ -264,7 +264,7 @@ shinyServer(function(input, output) {
       
       
       #add some line spacing
-      message <- paste0("<br><br>",message,"<br><br>")
+      message <- paste0("<br>",message,"<br><br>")
       return(message)  
     }
     
