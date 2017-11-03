@@ -173,7 +173,7 @@ shinyServer(function(input, output) {
       
       
       #prepare output table
-      out<-data.frame(matrix(
+      out<-data.frame(matrix(NA,
         ncol=nrow(c2)+1,
         nrow=time_lag*2+1, 
         dimnames=list(seq(-time_lag,time_lag),c("time_lag",c2[,"name"]))),check.names=F)
@@ -194,10 +194,39 @@ shinyServer(function(input, output) {
     }
   })
   
+  
   output$text1 <- renderText({
-    out<-get_correlations()
+    time_lag <- input$time_lag
+    c1<-get_correlations()
     if(!is.null(out)){
-      return(paste("<br>a table with",nrow(out),"lines<br><br>"))  
+      
+      #getting the best no lag corr
+      no_lag<-t(c1["0",2:ncol(c1)])
+      no_lag<-no_lag[order(abs(no_lag[,1]),decreasing = T),,drop=F]
+      best_no_lag<-rownames(no_lag)[1]
+      
+      #if no time lag, just return
+      if(time_lag==0){
+        #composing message
+        message <- paste0("<br>The strongest correlation seems to be ",best_no_lag,".<br>")
+      
+        
+      #getting the best any corr
+        }else{
+        c2<-c1[order(apply(abs(c1[,2:ncol(c1)]),1,max),decreasing=T),]
+        best_lag_t <- rownames(c2)[1]
+        lag<-t(c2[best_lag_t,2:ncol(c2)])
+        lag<-lag[order(abs(lag[,1]),decreasing = T),,drop=F]
+        best_lag_c<-rownames(lag)[1]
+      
+      
+        message <- paste0("The strongest same-day correlation seems to be ",best_no_lag,". When also searching for correlations before or after ('time-lag'), the strongest correlation seems to be ",best_lag_c," at time ",best_lag_t,".<br>")
+      }
+      
+      
+      
+      
+      return(message)  
     }
     
   })
@@ -210,7 +239,7 @@ shinyServer(function(input, output) {
       for(i in 2:ncol(out)){
         out[,i] <- signif(out[,i],2)
       }
-      
+      colnames(out)[1] <- "Time lag"
       return(out)
     }
   })

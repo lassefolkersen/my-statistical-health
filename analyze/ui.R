@@ -33,6 +33,12 @@ shinyUI(bootstrapPage(
   beginPanel('2/3'),
   
   h2("Time series analysis:"),
+  conditionalPanel(
+    condition = "input.do_correlation",
+    html("To avoid spurious correlations, it is your responsibility that data is <u><a href='https://en.wikipedia.org/wiki/Stationary_process'stationary</a></u>. This just means that if there's a general trend or an un-related seasonality over time, then you may get inflated correlations.")
+  ),
+  
+  
   plotOutput("plot1"),
   htmlOutput("text1"),
   dataTableOutput("table1"),
