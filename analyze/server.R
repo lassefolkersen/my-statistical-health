@@ -6,7 +6,7 @@ options(shiny.maxRequestSize=100*1024^2)
 # source("/home/ubuntu/srv/my-statistical-health/functions.R")
 
 
-
+print("test0")
 
 # Define server logic for random distribution application
 shinyServer(function(input, output) {
@@ -14,11 +14,13 @@ shinyServer(function(input, output) {
   
   output$ui_choices <- renderUI({
     input$uniqueID #update when uniqueID changes
-    d<-get_data()
-    
+    print("test1")
+    d<-get_data_1()
+    print("test4")
     if(is.null(d)){
       out = checkboxGroupInput("dynamic", "Variables to show",choices = NULL)  
     }else{
+      print("test6")
       c1 <- colnames(d)[2:ncol(d)]
       out = checkboxGroupInput("dynamic", "Variables to show",choices = c1)
     }
@@ -27,7 +29,7 @@ shinyServer(function(input, output) {
     
   output$ui_slider <- renderUI({
     input$uniqueID #update when uniqueID changes
-    d<-get_data()
+    d<-get_data_1()
     
     if(is.null(d)){
       out = sliderInput("time_window", "Time Window",min = 0, max = 10,value = c(1,9), step = 1)
@@ -40,25 +42,30 @@ shinyServer(function(input, output) {
    
   
   
-  
-  
-  
-  
-  
-  get_data <- reactive({
-    uniqueID <- isolate(gsub(" ","",input$uniqueID))
-    variables <- isolate(input$dynamic)
-    
+  #just get the data - nothing more (for UI components)
+  get_data_1 <- reactive({
+    uniqueID <- gsub(" ","",input$uniqueID)
     
     if(nchar(uniqueID)!=12 | length(grep("^id_",uniqueID))==0){
-     stop(safeError("uniqueID must be a 12 digit identifier starting with id_")) 
+      stop(safeError("uniqueID must be a 12 digit identifier starting with id_")) 
     }
-      
-    
     #get the data
     f1 <- paste0("/home/ubuntu/data/",uniqueID,"/",uniqueID,".rdata")
-    if(!file.exists(f1)){return(NULL)}
+    if(!file.exists(f1)){
+      Sys.sleep(1)
+      stop(safeError(paste("This uniqueID",uniqueID,"does not exists")) )
+    }
     load(f1)  
+    #remove any completely empty rows
+    d<-d[apply(is.na(d),1,sum) < ncol(d)-1,]
+  })
+  
+  
+  #get the data and clean it a bit - (for analytical components)
+  get_data_2 <- reactive({
+    variables <- isolate(input$dynamic)
+
+    d<-get_data_1()
 
     #remove any completely empty rows
     d<-d[apply(is.na(d),1,sum) < ncol(d)-1,]
@@ -108,7 +115,7 @@ shinyServer(function(input, output) {
     
     #take dependency
     if(input$goButton > 0 & !is.null(variables)){
-      d<-get_data()
+      d<-get_data_2()
       
       library(RColorBrewer)
       col<-brewer.pal(12,"Set3")
@@ -145,7 +152,7 @@ shinyServer(function(input, output) {
     if(input$predictionButton > 0){
       
       #get data
-      d<-get_data()
+      d<-get_data_2()
       
       #get comparisons
       c2<-data.frame(t(combn(variables,2)),stringsAsFactors = F)

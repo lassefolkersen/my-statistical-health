@@ -18,12 +18,14 @@ shinyUI(bootstrapPage(
     uiOutput("ui_choices")
   ),
   actionButton("goButton","Plot data"),
-  actionButton("predictionButton","Prediction analysis"),
-  actionButton("interactionButton","Interaction analysis"),
+  checkboxInput("do_correlation", label ="Analyze correlation", value = FALSE),
   checkboxInput("advanced", label ="Advanced options", value = FALSE),
   conditionalPanel(
     condition = "input.advanced",
-    uiOutput("ui_slider"),
+    uiOutput("ui_slider")
+  ),
+  conditionalPanel(
+    condition = "input.advanced & input.do_correlation",
     sliderInput("time_lag", "Max correlation lag",min = 1, max = 30,value = 10, step = 1)
   ),
   
