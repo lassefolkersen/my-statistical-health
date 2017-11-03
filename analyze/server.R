@@ -111,9 +111,9 @@ shinyServer(function(input, output) {
   
   
   output$plot1 <- renderPlot({
-    uniqueID <- isolate(gsub(" ","",input$uniqueID))
-    variables <- isolate(input$dynamic)
-    time_window <- isolate(input$time_window)
+    uniqueID <- gsub(" ","",input$uniqueID)
+    variables <- input$dynamic
+    time_window <- input$time_window
     
     #take dependency
     if(input$goButton > 0 & !is.null(variables)){
@@ -156,9 +156,9 @@ shinyServer(function(input, output) {
   })
   
   output$table1 <- renderDataTable({
-    uniqueID <- isolate(gsub(" ","",input$uniqueID))
-    variables <- isolate(input$dynamic)
-    time_lag <- isolate(input$time_lag)
+    uniqueID <- gsub(" ","",input$uniqueID)
+    variables <- input$dynamic)
+    time_lag <- input$time_lag
     
     #take dependency
     if(input$goButton > 0 & input$do_correlation){
