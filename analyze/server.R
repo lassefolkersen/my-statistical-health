@@ -13,8 +13,9 @@ shinyServer(function(input, output) {
   
   
   output$ui_choices <- renderUI({
+    input$uniqueID #update when uniqueID changes
     d<-get_data()
-   
+    
     if(is.null(d)){
       out = checkboxGroupInput("dynamic", "Variables to show",choices = NULL)  
     }else{
@@ -25,12 +26,12 @@ shinyServer(function(input, output) {
   })
     
   output$ui_slider <- renderUI({
+    input$uniqueID #update when uniqueID changes
     d<-get_data()
     
     if(is.null(d)){
       out = sliderInput("time_window", "Time Window",min = 0, max = 10,value = c(1,9), step = 1)
     }else{
-      # c1 <- colnames(d)[2:ncol(d)]
       d1<-d[,"date"]
       out = sliderInput("time_window", "Time Window",min = min(d1), max = max(d1),value = range(d1), step = 1)
     }
