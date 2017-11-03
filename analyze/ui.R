@@ -13,14 +13,20 @@ shinyUI(bootstrapPage(
   textInput(inputId="uniqueID", label = "Unique ID", value = "id_XXXXXXXXX"),
   
   
+  # This outputs the dynamic UI choice-component
   wellPanel(
-    # This outputs the dynamic UI component
-    uiOutput("ui")
-    
+    uiOutput("ui_choices")
   ),
   actionButton("goButton","Plot data"),
   actionButton("predictionButton","Prediction analysis"),
   actionButton("interactionButton","Interaction analysis"),
+  checkboxInput("advanced", label ="Advanced options", value = FALSE),
+  conditionalPanel(
+    condition = "input.advanced",
+    uiOutput("ui_slider"),
+    sliderInput("time_lag", "Max correlation lag",min = 1, max = 30,value = 10, step = 1)
+  ),
+  
   endPanel(),
   beginPanel('2/3'),
   
