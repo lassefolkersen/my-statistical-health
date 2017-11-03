@@ -6,7 +6,6 @@ options(shiny.maxRequestSize=100*1024^2)
 # source("/home/ubuntu/srv/my-statistical-health/functions.R")
 
 
-print("test0")
 
 # Define server logic for random distribution application
 shinyServer(function(input, output) {
@@ -14,13 +13,10 @@ shinyServer(function(input, output) {
   
   output$ui_choices <- renderUI({
     input$uniqueID #update when uniqueID changes
-    print("test1")
     d<-get_data_1()
-    print("test4")
     if(is.null(d)){
       out = checkboxGroupInput("dynamic", "Variables to show",choices = NULL)  
     }else{
-      print("test6")
       c1 <- colnames(d)[2:ncol(d)]
       out = checkboxGroupInput("dynamic", "Variables to show",choices = c1)
     }
@@ -125,8 +121,12 @@ shinyServer(function(input, output) {
       
       
       #subset to requested time window
+      if(class(time_window)!="Date"){
+        print(time_window)
+         stop("Time_window must be of class date")
+      }
       d<-d[d[,"date"] >= time_window[1] & d[,"date"] <= time_window[2],]
-      
+      if(nrow(d)<1)stop(safeError("No data lines to plot - perhaps increase time window?"))
       
       #set colours
       library(RColorBrewer)
@@ -189,7 +189,7 @@ shinyServer(function(input, output) {
 
         #calculate correlation
         corr<-ccf(d1[,var1],d1[,var2],plot = F, lag.max=time_lag)
-        out[,c2[j,"name"]] <- signif(corr[["acf"]][,,1],3)
+        out[,c2[j,"name"]] <- corr[["acf"]][,,1]
       }
     return(out)
     }
