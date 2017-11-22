@@ -53,15 +53,7 @@ prepare_input_file<-function(path, email, filename, protect_from_deletion){
     stop(safeError(paste("a real email adress is needed:",email)))
   }
   
-  acceptedMails<-read.table("/home/ubuntu/misc_files/accepted_emails.txt",stringsAsFactors=F)[,1]
-  if(!email%in%acceptedMails & FALSE){ #changed to always accept submission for now
-    m<-c(format(Sys.time(),"%Y-%m-%d-%H-%M-%S"),"not_accepted_email",email,path)
-    m<-paste(m,collapse="\t")
-    write(m,file="/home/ubuntu/misc_files/submission_log.txt",append=TRUE)			
-    stop(safeError("At the current stage, the project is only open to backers. Please visit our kickstarter page at: http://kck.st/1VlrTlf - sorry for the inconvenience. Going forward the plan is to run on a more voluntary pricing basis, always as non-profit (see terms-of-use). No data was saved."))
-  }
-  
-  
+
   # Create uniqueID 
   uniqueID <- paste("id_",sample(1000:9000,1),sample(10000:90000,1),sep="")
   numberOfLetters<-sample(c(1,1,2,3),1)
@@ -109,13 +101,13 @@ prepare_input_file<-function(path, email, filename, protect_from_deletion){
     m<-c(format(Sys.time(),"%Y-%m-%d-%H-%M-%S"),"no_date_class",email,uniqueID)
     m<-paste(m,collapse="\t")
     write(m,file="/home/ubuntu/misc_files/submission_log.txt",append=TRUE)
-    stop(safeError("The first column must contain data that is seens as a date."))
+    stop(safeError("The first column must contain data that is seen as a date."))
     
   }
   
   
   
-  #create data folder  
+  #create data folder, copy input file and save output file
   data_folder<-paste("/home/ubuntu/data/",uniqueID,"/",sep="")
   dir.create(data_folder)
   data_path<-paste("/home/ubuntu/data/",uniqueID,"/",uniqueID,".rdata",sep="")
