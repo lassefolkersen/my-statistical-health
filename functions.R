@@ -110,8 +110,10 @@ prepare_input_file<-function(path, email, filename, protect_from_deletion){
   #create data folder, copy input file and save output file
   data_folder<-paste("/home/ubuntu/data/",uniqueID,"/",sep="")
   dir.create(data_folder)
-  data_path<-paste("/home/ubuntu/data/",uniqueID,"/",uniqueID,".rdata",sep="")
-  save(d,file=data_path)
+  output_data_path<-paste("/home/ubuntu/data/",uniqueID,"/",uniqueID,".rdata",sep="")
+  save(d,file=output_data_path)
+  input_data_path<-paste("/home/ubuntu/data/",uniqueID,"/",uniqueID,"_input_data.xlsx",sep="")
+  file.copy(path,input_data_path)
   
   
   #creating the pData file
