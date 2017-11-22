@@ -145,7 +145,7 @@ shinyServer(function(input, output) {
       plot(x=d[,"date"],y=rep(0,nrow(d)),type="n",xlab="",ylab="",yaxt="n",ylim=c(0,1))
       for(i in 1:nrow(r)){
         data <- d[,paste0(r[i,"request"],"_loess")]
-        data_norm <- (data-min(data)) / (max(data)-min(data))
+        data_norm <- (data-min(data,na.rm=T)) / (max(data,na.rm=T)-min(data,na.rm=T))
         lines(d[,"date"], y=data_norm,col=r[i,"col"], lwd=r[i,"lwd"])
       }
       
