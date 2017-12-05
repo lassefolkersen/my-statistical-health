@@ -281,9 +281,13 @@ shinyServer(function(input, output) {
       for(i in 2:ncol(c1)){
         c1[,i] <- signif(c1[,i],2)
       }
-      c1 <- t(c1)
-      # colnames(c1)[1] <- "Time lag"
-      return(c1)
+      c2 <- t(c1)
+      
+      
+      c3 <- cbind(Comparison = rownames(c2), c2)
+      
+      
+      return(c3)
     }
   })
   
