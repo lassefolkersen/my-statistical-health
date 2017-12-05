@@ -161,6 +161,8 @@ shinyServer(function(input, output) {
     variables <- input$dynamic
     time_lag <- input$time_lag
     
+    if(length(variables) <= 1)stop(safeError("Cannot do correlation analysis when less than 2 variables are selected."))
+    
     if(input$goButton > 0 & input$do_correlation){
       #get data
       d<-get_all_data()
@@ -287,7 +289,7 @@ shinyServer(function(input, output) {
       c3 <- cbind(Comparison = rownames(c2), c2)
       
       #drop the time-lag row
-      c4<-c3[2:nrow(c3),]
+      c4<-c3[2:nrow(c3),,drop=F]
       
       
       #if time_lag zero we just do very plain headers

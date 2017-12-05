@@ -26,7 +26,7 @@ shinyUI(bootstrapPage(
   ),
   conditionalPanel(
     condition = "input.advanced & input.do_correlation",
-    sliderInput("time_lag", "Max correlation lag",min = 0, max = 30,value = 1, step = 1)
+    sliderInput("time_lag", "Max correlation lag",min = 0, max = 20,value = 0, step = 1)
   ),
   
   endPanel(),
