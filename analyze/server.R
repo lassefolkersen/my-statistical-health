@@ -161,9 +161,10 @@ shinyServer(function(input, output) {
     variables <- input$dynamic
     time_lag <- input$time_lag
     
-    if(length(variables) <= 1)stop(safeError("Cannot do correlation analysis when less than 2 variables are selected."))
     
     if(input$goButton > 0 & input$do_correlation){
+      if(length(variables) <= 1)stop(safeError("Cannot do correlation analysis when less than 2 variables are selected."))
+      
       #get data
       d<-get_all_data()
       
