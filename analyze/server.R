@@ -276,10 +276,12 @@ shinyServer(function(input, output) {
   output$table1 <- renderDataTable({
     c1<-get_correlations()
     if(!is.null(c1)){
+      
+      c1 <- t(c1)
       for(i in 2:ncol(c1)){
         c1[,i] <- signif(c1[,i],2)
       }
-      colnames(c1)[1] <- "Time lag"
+      # colnames(c1)[1] <- "Time lag"
       return(c1)
     }
   })
