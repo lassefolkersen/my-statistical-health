@@ -286,8 +286,22 @@ shinyServer(function(input, output) {
       
       c3 <- cbind(Comparison = rownames(c2), c2)
       
+      #drop the time-lag row
+      c4<-c3[2:nrow(c3),]
       
-      return(c3)
+      
+      #if time_lag zero we just do very plain headers
+      if( input$time_lag == 0){
+        if(ncol(c4)!=2)stop("Very odd - should only be one column in time_lag 0")
+        colnames(c4) <- c("","Correlation")
+        
+      #otherwise we explain the time-lag in the headers  
+      }else{
+        colnames(c4)[1] <- c("Time-lag:")
+        
+      }
+      
+      return(c4)
     }
   })
   
