@@ -7,7 +7,7 @@ shinyUI(bootstrapPage(
 	titlePanel("Contact"),
 	beginPage(),
 	HTML(	"
-Design and calculations: <u><a href='http://www.dtu.dk/service/telefonbog/person?id=101696&tab=2&qt=dtupublicationquery'>Lasse Folkersen</a></u>.<br>"),
+Design and calculations: <u><a href='http://orcid.org/0000-0003-0708-9530'>Lasse Folkersen</a></u>.<br>"),
 # 	endPage(),
 	footer()
 ))
