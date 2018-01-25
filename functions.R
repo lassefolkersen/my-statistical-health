@@ -87,11 +87,11 @@ prepare_input_file<-function(path, email, filename, protect_from_deletion){
   }
   
   
-  if(tolower(colnames(d)[1])!="date"){
+  if(length(grep("date",colnames(d),ignore.case = TRUE))!=1){
     m<-c(format(Sys.time(),"%Y-%m-%d-%H-%M-%S"),"no_date_header",email,uniqueID)
     m<-paste(m,collapse="\t")
     write(m,file="/home/ubuntu/misc_files/submission_log.txt",append=TRUE)
-    stop(safeError("The header of the first column must be 'date'."))
+    stop(safeError("The first column of the xlsx-file must contain dates. The header must therefore contain the word 'date'."))
   }
   if(colnames(d)[1]!="date"){colnames(d)[1]<-"date"}
   
@@ -101,10 +101,15 @@ prepare_input_file<-function(path, email, filename, protect_from_deletion){
     m<-c(format(Sys.time(),"%Y-%m-%d-%H-%M-%S"),"no_date_class",email,uniqueID)
     m<-paste(m,collapse="\t")
     write(m,file="/home/ubuntu/misc_files/submission_log.txt",append=TRUE)
-    stop(safeError("The first column must contain data that is seen as a date."))
+    stop(safeError("The first column must contain data that is seen as a date by our parsing algorithm."))
     
   }
   
+  #remove any completely empty rows
+  d<-d[apply(is.na(d),1,sum) < ncol(d)-1,]
+  
+  #remove any rows with empty date
+  d<-d[!is.na(d[,"date"]),]
   
   
   #create data folder, copy input file and save output file

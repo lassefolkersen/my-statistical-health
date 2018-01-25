@@ -50,6 +50,10 @@ shinyServer(function(input, output) {
     load(f1)  
     #remove any completely empty rows
     d<-d[apply(is.na(d),1,sum) < ncol(d)-1,]
+    
+    #remove any rows with empty date
+    d<-d[!is.na(d[,"date"]),]
+    
   })
   
   
@@ -69,8 +73,6 @@ shinyServer(function(input, output) {
       stop(safeError(paste("This uniqueID does not exists")) )
     }
     
-    #remove any completely empty rows
-    d<-d[apply(is.na(d),1,sum) < ncol(d)-1,]
     
     
     #subset to time_window if requested
