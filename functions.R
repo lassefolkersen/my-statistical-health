@@ -49,8 +49,10 @@ prepare_input_file<-function(path, email, filename, protect_from_deletion){
   
   if(class(email)!="character")stop(paste("email must be character, not",class(email)))
   if(length(email)!=1)stop(paste("email must be lengh 1, not",length(email)))
-  if( email == "" | sub("[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}","",toupper(email)) != ""){
-    stop(safeError(paste("a real email adress is needed:",email)))
+  if( email == ""){
+    email <- "testperson@testperson.dk"
+  }else if(sub("[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}","",toupper(email)) != ""){
+    stop(safeError(paste("If given, a real email adress is needed:",email)))
   }
   
 

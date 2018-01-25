@@ -9,7 +9,7 @@ shinyUI(bootstrapPage(
 	beginPage(),
 	beginPanel('1/3'),
 	fileInput("largeFile", "Upload genome data", multiple = FALSE, accept = NULL),
-	textInput(inputId="email", label = "Email", value = "lassefolkersen@gmail.com"),
+	textInput(inputId="email", label = "Email (optional)", value = ""),
 	HTML("<u><a href='www/terms_of_use.html'>Terms of use.</a></u>"),
 	checkboxInput("delete2weeks", "Delete data after two weeks", value = TRUE, width = NULL),
 	actionButton("goButton","Send data to analysis"),
