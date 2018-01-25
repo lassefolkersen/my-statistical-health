@@ -5,7 +5,7 @@ initialize('hc',TRUE)
 shinyUI(bootstrapPage(
 	head(),
 	navigation(),
-	titlePanel("Initiate genome analysis"),
+	titlePanel("Upload data"),
 	beginPage(),
 	beginPanel('1/3'),
 	fileInput("largeFile", "Upload genome data", multiple = FALSE, accept = NULL),
